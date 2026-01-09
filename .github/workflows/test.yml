@@ -1,0 +1,31 @@
+name: random
+
+on:
+  workflow_dispatch:
+
+jobs:
+  TEST:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - 3.11
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v5
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Run unit tests
+        run: |
+          chmod +x unit_tests.sh
+          ./unit_tests.sh
+
+      - name: upload test logs
+        uses: actions/upload-artifact@v5
+        with:
+          name: test-logs
+          path: sh-test.log
